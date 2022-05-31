@@ -13,7 +13,7 @@
         class="s-tree__item"
         :key="index"
         :class="{
-          's-tree__item__selected': item.value === checkKey,
+          's-tree__item__selected': item[valueKey] === checkKey,
         }"
         :style="{
           paddingLeft: 24 * (item.level - 1) + 'px',
@@ -22,9 +22,9 @@
         @click="handleCheck(item)"
       >
         <i
-          :class="item.expand ? 's-tree__expand' : 's-tree__shrink'"
+          :class="item[expandKey] ? 's-tree__expand' : 's-tree__shrink'"
           @click="handleToggle(item)"
-          v-if="item.children && item.children.length"
+          v-if="item[childrenKey] && item[childrenKey].length"
         />
         <span v-else style="margin-right: 15px"></span>
         <slot :item="item" :index="index"></slot>
@@ -48,28 +48,39 @@ export default {
     },
     defaultExpand: {
       type: Boolean,
-      required: false,
       default: false,
     },
     timeout: {
-      //刷新频率
+      // 刷新频率
       type: Number,
       default: 16,
     },
     height: {
-      //滚动容器的高度
+      // 滚动容器的高度
       type: Number,
       default: 720,
     },
     itemHeight: {
-      // 单个item的高度
+      // 单个 item 的高度
       type: Number,
       default: 32,
+    },
+    childrenKey: {
+      type: String,
+      default: "children",
+    },
+    valueKey: {
+      type: String,
+      default: "value",
+    },
+    expandKey: {
+      type: String,
+      default: "expand",
     },
   },
   data() {
     return {
-      offset: 0, // translateY偏移量
+      offset: 0, // translateY 偏移量
       contentHeight: 0,
       visibleData: [],
       checkKey: -1,
@@ -78,33 +89,35 @@ export default {
   computed: {
     // 将树结构扁平化
     flattenTree() {
-      function flatten(
-        list,
-        childKey = "children",
-        level = 1,
-        parent = null,
-        defaultExpand = false
-      ) {
-        let arr = [];
-        if (Array.isArray(list)) {
-          list.forEach((item) => {
+      const { tree, childrenKey, expandKey, defaultExpand } = this;
+      const topNode = {
+        level: 0,
+        visible: true,
+      };
+      topNode[expandKey] = true;
+      topNode[childrenKey] = tree;
+
+      function flatten(tree, childrenKey, level, parent, defaultExpand) {
+        const arr = [];
+        if (Array.isArray(tree)) {
+          tree.forEach((item) => {
             item.level = level;
-            if (item.expand === undefined) {
-              item.expand = defaultExpand;
+            if (item[expandKey] === undefined) {
+              item[expandKey] = defaultExpand;
             }
             if (item.visible === undefined) {
               item.visible = true;
             }
-            if (!parent.visible || !parent.expand) {
+            if (!parent.visible || !parent[expandKey]) {
               item.visible = false;
             }
             item.parent = parent;
             arr.push(item);
-            if (item[childKey] && Array.isArray(item[childKey])) {
+            if (item[childrenKey] && Array.isArray(item[childrenKey])) {
               arr.push(
                 ...flatten(
-                  item[childKey],
-                  childKey,
+                  item[childrenKey],
+                  childrenKey,
                   level + 1,
                   item,
                   defaultExpand
@@ -115,18 +128,7 @@ export default {
         }
         return arr;
       }
-      return flatten(
-        this.tree,
-        "children",
-        1,
-        {
-          level: 0,
-          visible: true,
-          expand: true,
-          children: this.tree,
-        },
-        true
-      );
+      return flatten(tree, childrenKey, 1, topNode, defaultExpand);
     },
     // 视图内展示的节点个数
     visibleCount() {
@@ -138,21 +140,19 @@ export default {
   },
   methods: {
     handleCheck(item) {
-      this.checkKey = item.value;
+      this.checkKey = item[this.valueKey];
       this.$emit("on-change", item);
     },
     updateView() {
       this.getContentHeight();
-      this.$emit("update", this.tree);
       this.handleScroll();
     },
     getContentHeight() {
-      this.contentHeight =
-        (this.flattenTree || []).filter((item) => item.visible).length *
-        this.itemHeight;
+      const visibleNodes = this.flattenTree.filter((item) => item.visible);
+      this.contentHeight = visibleNodes.length * this.itemHeight;
     },
     handleScroll() {
-      let currentTime = +new Date();
+      const currentTime = +new Date();
       if (currentTime - lastTime > this.timeout) {
         this.updateVisibleData(this.$refs.tree.scrollTop);
         lastTime = currentTime;
@@ -166,49 +166,53 @@ export default {
 
       const end = start + this.visibleCount * 2;
 
-      const allVisibleData = (this.flattenTree || []).filter(
-        (item) => item.visible
-      );
+      const allVisibleData = this.flattenTree.filter((item) => item.visible);
 
       this.visibleData = allVisibleData.slice(start, end);
+
       this.offset = start * this.itemHeight;
     },
     handleToggle(item) {
-      const isExpand = item.expand;
+      const { expandKey } = this;
+      const isExpand = item[expandKey];
       if (isExpand) {
         // 折叠
-        this.collapse(item, true);
+        this.collapse(item);
       } else {
         // 展开
-        this.expand(item, true);
+        this.expand(item);
       }
       this.updateView();
     },
     // 折叠节点
     collapse(item) {
-      item.expand = false;
-      this.recursionVisible(item.children, false);
+      const { expandKey, childrenKey } = this;
+      item[expandKey] = false;
+      this.recursionVisible(item[childrenKey], false);
     },
     // 展开节点
     expand(item) {
-      item.expand = true;
-      this.recursionVisible(item.children, true);
+      const { expandKey, childrenKey } = this;
+      item[expandKey] = true;
+      this.recursionVisible(item[childrenKey], true);
     },
     // 递归节点
     recursionVisible(children, status) {
+      const { expandKey, childrenKey } = this;
       children.forEach((node) => {
         node.visible = status;
-        node.expand = status;
-        if (node.children && node.children.length) {
-          this.recursionVisible(node.children, status);
+        node[expandKey] = status;
+        if (node[childrenKey] && node[childrenKey].length) {
+          this.recursionVisible(node[childrenKey], status);
         }
       });
     },
     // 折叠所有
     collapseAll(level = 1) {
+      const { expandKey } = this;
       this.flattenTree.forEach((item) => {
-        item.expand = false;
-        if (item.level != level) {
+        item[expandKey] = false;
+        if (item.level !== level) {
           item.visible = false;
         }
       });
@@ -216,8 +220,9 @@ export default {
     },
     // 展开所有
     expandAll() {
+      const { expandKey } = this;
       this.flattenTree.forEach((item) => {
-        item.expand = true;
+        item[expandKey] = true;
         item.visible = true;
       });
       this.updateView();
