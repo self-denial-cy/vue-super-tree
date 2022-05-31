@@ -1,35 +1,32 @@
 <template>
   <!-- 虚拟树组件 -->
   <div
-    class="b-tree"
-    ref="scroller"
-    :style="{ height: option.height + 'px' }"
+    class="s-tree"
+    ref="tree"
+    :style="`height: ${height}px`"
     @scroll="handleScroll"
   >
-    <div class="b-tree__phantom" :style="{ height: contentHeight }"></div>
-    <div
-      class="b-tree__content"
-      :style="{ transform: `translateY(${offset}px)` }"
-    >
+    <div class="s-tree__phantom" :style="`height: ${contentHeight}px`"></div>
+    <div class="s-tree__content" :style="`transform: translateY(${offset}px)`">
       <div
         v-for="(item, index) in visibleData"
+        class="s-tree__item"
         :key="index"
         :class="{
-          'b-tree__list-view': true,
-          'b-tree__list-view__selected': item.value == checkId,
+          's-tree__item__selected': item.value === checkKey,
         }"
         :style="{
           paddingLeft: 24 * (item.level - 1) + 'px',
-          height: option.itemHeight + 'px',
+          height: itemHeight + 'px',
         }"
-        @click="check(item)"
+        @click="handleCheck(item)"
       >
         <i
-          :class="item.expand ? 'b-tree__expand' : 'b-tree__close'"
-          @click="toggleExpand(item)"
+          :class="item.expand ? 's-tree__expand' : 's-tree__shrink'"
+          @click="handleToggle(item)"
           v-if="item.children && item.children.length"
         />
-        <span v-else style="margin-right: 10px"></span>
+        <span v-else style="margin-right: 15px"></span>
         <slot :item="item" :index="index"></slot>
       </div>
     </div>
@@ -59,24 +56,23 @@ export default {
       type: Number,
       default: 16,
     },
-    option: {
-      // 配置对象
-      type: Object,
-      required: false,
-      default() {
-        return {
-          height: 720, //滚动容器的高度
-          itemHeight: 32, // 单个item的高度
-        };
-      },
+    height: {
+      //滚动容器的高度
+      type: Number,
+      default: 720,
+    },
+    itemHeight: {
+      // 单个item的高度
+      type: Number,
+      default: 32,
     },
   },
   data() {
     return {
       offset: 0, // translateY偏移量
-      contentHeight: "0px",
+      contentHeight: 0,
       visibleData: [],
-      checkId: -1,
+      checkKey: -1,
     };
   },
   computed: {
@@ -134,15 +130,15 @@ export default {
     },
     // 视图内展示的节点个数
     visibleCount() {
-      return Math.floor(this.option.height / this.option.itemHeight);
+      return Math.floor(this.height / this.itemHeight);
     },
   },
   mounted() {
     this.updateView();
   },
   methods: {
-    check(item) {
-      this.checkId = item.value;
+    handleCheck(item) {
+      this.checkKey = item.value;
       this.$emit("on-change", item);
     },
     updateView() {
@@ -153,19 +149,18 @@ export default {
     getContentHeight() {
       this.contentHeight =
         (this.flattenTree || []).filter((item) => item.visible).length *
-          this.option.itemHeight +
-        "px";
+        this.itemHeight;
     },
     handleScroll() {
       let currentTime = +new Date();
       if (currentTime - lastTime > this.timeout) {
-        this.updateVisibleData(this.$refs.scroller.scrollTop);
+        this.updateVisibleData(this.$refs.tree.scrollTop);
         lastTime = currentTime;
       }
     },
     updateVisibleData(scrollTop = 0) {
       let start =
-        Math.floor(scrollTop / this.option.itemHeight) -
+        Math.floor(scrollTop / this.itemHeight) -
         Math.floor(this.visibleCount / 2);
       start = start < 0 ? 0 : start;
 
@@ -176,9 +171,9 @@ export default {
       );
 
       this.visibleData = allVisibleData.slice(start, end);
-      this.offset = start * this.option.itemHeight;
+      this.offset = start * this.itemHeight;
     },
-    toggleExpand(item) {
+    handleToggle(item) {
       const isExpand = item.expand;
       if (isExpand) {
         // 折叠
