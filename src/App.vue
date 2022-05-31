@@ -1,5 +1,7 @@
 <template>
-  <div id="app"></div>
+  <div id="app">
+    <vue-super-tree></vue-super-tree>
+  </div>
 </template>
 
 <script>
