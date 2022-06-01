@@ -144,7 +144,8 @@ export default {
   },
   methods: {
     handleCheck(item) {
-      this.checkKey = item[this.valueKey];
+      const { valueKey } = this;
+      this.checkKey = item[valueKey];
       this.$emit("on-change", item);
     },
     updateView() {
@@ -162,7 +163,7 @@ export default {
         lastTime = currentTime;
       }
     },
-    updateVisibleData(scrollTop = 0) {
+    updateVisibleData(scrollTop) {
       let start =
         Math.floor(scrollTop / this.itemHeight) -
         Math.floor(this.visibleCount / 2);
