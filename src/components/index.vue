@@ -16,7 +16,7 @@
           's-tree__item__selected': item[valueKey] === checkKey,
         }"
         :style="{
-          paddingLeft: 24 * (item.level - 1) + 'px',
+          paddingLeft: padding * (item.level - 1) + 'px',
           height: itemHeight + 'px',
         }"
         @click="handleCheck(item)"
@@ -76,6 +76,10 @@ export default {
     expandKey: {
       type: String,
       default: "expand",
+    },
+    padding: {
+      type: Number,
+      default: 24,
     },
   },
   data() {

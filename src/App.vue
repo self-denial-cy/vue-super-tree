@@ -1,6 +1,12 @@
 <template>
   <div id="app">
-    <vue-super-tree :tree="treeData" valueKey="_key" :height="height">
+    <vue-super-tree
+      :tree="treeData"
+      valueKey="_key"
+      :height="height"
+      :padding="36"
+      defaultExpand
+    >
       <template v-slot="{ item }">
         <span>{{ item._key }}</span>
       </template>
