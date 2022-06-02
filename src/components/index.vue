@@ -51,9 +51,9 @@ export default {
       default: false,
     },
     timeout: {
-      // 刷新频率
+      // 刷新频率 数值越低越精确，但是性能消耗也会大大增加
       type: Number,
-      default: 16,
+      default: 8,
     },
     height: {
       // 滚动容器的高度
