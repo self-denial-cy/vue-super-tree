@@ -193,24 +193,40 @@ export default {
     collapse(item) {
       const { expandKey, childrenKey } = this;
       item[expandKey] = false;
-      this.recursionVisible(item[childrenKey], false);
+      function recursionVisible(children) {
+        children.forEach((node) => {
+          node.visible = false;
+          if (node[childrenKey] && node[childrenKey].length) {
+            recursionVisible(node[childrenKey]);
+          }
+        });
+      }
+      recursionVisible(item[childrenKey]);
     },
     // 展开节点
     expand(item) {
-      const { expandKey, childrenKey } = this;
+      const { expandKey, childrenKey, recursionParent } = this;
       item[expandKey] = true;
-      this.recursionVisible(item[childrenKey], true);
+      function recursionVisible(children) {
+        children.forEach((node) => {
+          if (!recursionParent(node.parent).includes(false)) {
+            node.visible = true;
+          }
+          if (node[childrenKey] && node[childrenKey].length) {
+            recursionVisible(node[childrenKey]);
+          }
+        });
+      }
+      recursionVisible(item[childrenKey]);
     },
-    // 递归节点
-    recursionVisible(children, status) {
-      const { expandKey, childrenKey } = this;
-      children.forEach((node) => {
-        node.visible = status;
-        node[expandKey] = status;
-        if (node[childrenKey] && node[childrenKey].length) {
-          this.recursionVisible(node[childrenKey], status);
-        }
-      });
+    recursionParent(item) {
+      const { expandKey } = this;
+      const arr = [];
+      arr.push(item[expandKey]);
+      if (item.parent) {
+        arr.push(...this.recursionParent(item.parent));
+      }
+      return arr;
     },
     // 折叠所有
     collapseAll(level = 1) {

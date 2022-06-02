@@ -5,7 +5,6 @@
       valueKey="_key"
       :height="height"
       :padding="36"
-      defaultExpand
     >
       <template v-slot="{ item }">
         <span>{{ item._key }}</span>
