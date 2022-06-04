@@ -1,6 +1,9 @@
 {
   "name": "@self-denial-cy/vue-super-tree",
   "version": "1.0.0",
+  "description": "a tree component based on vue@2, which supports mass tree node and some attributes",
+  "files": ["lib"],
+  "main": "lib/vue-super-tree.umd.min.js",
   "scripts": {
     "serve": "vue-cli-service serve",
     "lint": "vue-cli-service lint",
@@ -10,6 +13,20 @@
     "postanalyze": "rm ./lib/demo.html",
     "git:auto": "git add . && git commit -m 'some update' && git push"
   },
+  "keywords": [
+    "vue@2",
+    "tree",
+    "mass tree node",
+    "vue-super-tree",
+    "vue super tree"
+  ],
+  "author": "self-denial-cy",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://gitee.com/self-denial-cy/vue-super-tree.git"
+  },
+  "bugs": "https://gitee.com/self-denial-cy/vue-super-tree/issues",
   "dependencies": {
     "core-js": "^3.6.5"
   },
