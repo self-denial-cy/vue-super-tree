@@ -252,6 +252,4 @@ export default {
 };
 </script>
 
-<style>
-@import url("./index.css");
-</style>
+<style src="./index.css" scoped></style>

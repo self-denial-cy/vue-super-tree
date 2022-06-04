@@ -3,7 +3,12 @@
   "version": "1.0.0",
   "scripts": {
     "serve": "vue-cli-service serve",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "build:lib": "vue-cli-service build --dest lib --target lib --name vue-super-tree ./src/index.js",
+    "postbuild:lib": "rm ./lib/demo.html",
+    "analyze": "vue-cli-service build --report --dest lib --target lib --name vue-super-tree ./src/index.js",
+    "postanalyze": "rm ./lib/demo.html",
+    "git:auto": "git add . && git commit -m 'some update' && git push"
   },
   "dependencies": {
     "core-js": "^3.6.5"
