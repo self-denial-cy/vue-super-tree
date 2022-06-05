@@ -14,4 +14,4 @@ function recursionGenerateTree(level, range, depth, prefix) {
   return arr;
 }
 
-export default recursionGenerateTree(1, 10, 5);
+export default recursionGenerateTree(1, 10, 4);
