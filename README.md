@@ -92,14 +92,14 @@ export default {
 
 # 支持的组件属性
 
-| 参数             | 说明                        | 类型     | 是否必传 | 可选值 | 默认值                                                       |
-| :--------------: | :-------------------------- | :------: | :------: | :----: | :----------------------------------------------------------: |
-| tree | 树形结构数据                | Array | true |        | []                                                          |
-| defaultExpand | 是否默认展开              | Boolean | false    |        | false                                                     |
-| timeout | 刷新频率（数值越低越精确，但是性能消耗也会大大增加） | Number   | false    |        | 8                                                          |
-| height | 滚动容器的高度         | Number   | false    |        | 720                                                         |
-| itemHeight | 单个 item 的高度       | Number | false    |        | 32                                                   |
-| childrenKey | children 字段的 key | String | false    |        | children                                                    |
-| valueKey | value 字段的 key | String | false    |        | value                                                    |
-| expandKey | expand 字段的 key | String | false    |        | expand |
-| padding | 节点的段间距          | Number | false    |        | 24                                                    |
+| 参数             | 说明                        | 类型     | 是否必传 | 默认值 |
+| :--------------: | :-------------------------- | :------: | :------: | :----: |
+| tree | 树形结构数据                | Array | true | [] |
+| defaultExpand | 是否默认展开              | Boolean | false    | false |
+| timeout | 刷新频率（数值越低越精确，但是性能消耗也会大大增加） | Number   | false    | 8 |
+| height | 滚动容器的高度         | Number   | false    | 720 |
+| itemHeight | 单个 item 的高度       | Number | false    | 32 |
+| childrenKey | children 字段的 key | String | false    | children |
+| valueKey | value 字段的 key | String | false    | value |
+| expandKey | expand 字段的 key | String | false    | expand |
+| padding | 节点的段间距          | Number | false    | 24 |
