@@ -7,6 +7,8 @@
   ],
   "main": "lib/vue-super-tree.umd.min.js",
   "scripts": {
+    "docs:dev": "vuepress dev docs",
+    "docs:build": "vuepress build docs",
     "serve": "vue-cli-service serve",
     "lint": "vue-cli-service lint",
     "build:lib": "vue-cli-service build --dest lib --target lib --name vue-super-tree ./src/index.js",
@@ -43,7 +45,8 @@
     "eslint-plugin-vue": "^6.2.2",
     "prettier": "^2.2.1",
     "vue": "^2.6.11",
-    "vue-template-compiler": "^2.6.11"
+    "vue-template-compiler": "^2.6.11",
+    "vuepress": "^1.9.7"
   },
   "peerDependencies": {
     "vue": "^2.6.11"
