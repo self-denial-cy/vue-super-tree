@@ -15,7 +15,7 @@
     "postbuild:lib": "rm ./lib/demo.html",
     "analyze": "vue-cli-service build --report --dest lib --target lib --name vue-super-tree ./src/index.js",
     "postanalyze": "rm ./lib/demo.html",
-    "git:auto": "git add . && git commit -m 'some update' && git push"
+    "git:auto": "git add . && git commit -m 'some update' && git push && git push GitHub"
   },
   "keywords": [
     "vue@2",
