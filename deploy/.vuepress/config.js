@@ -1,5 +1,5 @@
 module.exports = {
-  base: process.env.NODE_ENV === "production" ? "/vue-super-tree" : "/",
+  base: process.env.NODE_ENV === "production" ? "/vue-super-tree/" : "/",
   dest: "docs",
   head: [
     ['link', {
