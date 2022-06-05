@@ -1,6 +1,6 @@
 {
   "name": "@self-denial-cy/vue-super-tree",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "a tree component based on vue@2, which supports mass tree node and some attributes",
   "files": [
     "lib"
