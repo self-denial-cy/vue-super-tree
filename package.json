@@ -7,8 +7,8 @@
   ],
   "main": "lib/vue-super-tree.umd.min.js",
   "scripts": {
-    "docs:dev": "vuepress dev docs",
-    "docs:build": "vuepress build docs",
+    "docs:dev": "vuepress dev deploy",
+    "docs:build": "vuepress build deploy",
     "serve": "vue-cli-service serve",
     "lint": "vue-cli-service lint",
     "build:lib": "vue-cli-service build --dest lib --target lib --name vue-super-tree ./src/index.js",

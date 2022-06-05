@@ -1,6 +1,6 @@
 module.exports = {
   base: process.env.NODE_ENV === "production" ? "/vue-super-tree" : "/",
-  dest: "example",
+  dest: "docs",
   head: [
     ['link', {
       rel: 'icon',

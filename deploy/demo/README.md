@@ -10,4 +10,4 @@ sidebar: auto
 
 ## 基本用法
 
-<<< @/docs/.vuepress/snippets/demo.vue
+<<< @/deploy/.vuepress/snippets/demo.vue
